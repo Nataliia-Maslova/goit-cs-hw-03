@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mongo_service:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - myapp:/data/db
+
+  python_service:
+    build: .
+    ports:
+      - "8000:8000"  
+    depends_on:
+      - mongo_service  
+    environment:
+      - MONGO_URI=mongodb://mongo_service:27017  
+    networks:
+      - my_network
+
+volumes:
+  myapp:
+
+networks:
+  my_network:
+    driver: bridge
